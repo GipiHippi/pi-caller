@@ -1,0 +1,4 @@
+*.sec.py
+*.log
+*.pyc
+*.conf
