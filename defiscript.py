@@ -7,9 +7,10 @@ import plivo
 import time
 import subprocess
 import logging #logfile
+import logging.handlers
 import RPi.GPIO as GPIO
 import datetime #Anrufszeit auslesen
-import os.path
+import os
 
 
 GPIO.setmode(GPIO.BCM)
@@ -61,20 +62,33 @@ GPIO.output(7, False)
 GPIO.output(12, False)
 GPIO.output(20, False)
 
+scriptpath = os.path.dirname(__file__)
 
-day_of_year = time.localtime().tm_yday
+#initialize logging
+# create console handler and set level to info
+# Set up a specific logger with our desired output level
+logger = logging.getLogger('defi_logger')
+logger.setLevel(logging.DEBUG)
 
-LOG_FILENAME = 'log/LogFile_' + str(day_of_year)
-logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,format='%(asctime)s %(levelname)s: %(message)s')
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+# create rotating logfile handler
+# Add the log message handler to the logger
+LOG_FILENAME ="/var/log/defi/defilog"
+handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=200000, backupCount=5)
+formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+handler.setLevel(logging.DEBUG)
+logger.addHandler(handler)
+logger.info("defi alarm started")
+logger.info("using log file : %s", LOG_FILENAME)
 
 while True:
-    GPIO.output(15, False)
-    GPIO.output(23, False)
-    GPIO.output(25, False)
-    GPIO.output(7, False)
-    GPIO.output(12, False)
-    GPIO.output(20, False)
-    time.sleep(0.005)
+    time.sleep(0.05)
     key_status1 = GPIO.input(14)
     key_status2 = GPIO.input(18)
     key_status3 = GPIO.input(24)
@@ -82,42 +96,92 @@ while True:
     key_status5 = GPIO.input(1)
     key_status6 = GPIO.input(16)
 
-    if key_status1 and (key_status1 != last_key_status1):
-        print("Button 1 Pressed")
-        logging.debug('Button 1 Pressed')
-        GPIO.output(15, True)
-        subprocess.Popen("callscripts/save/script01.py") #subprocess.Popen("swfdump /tmp/filename.swf -d")
+    if key_status1 != last_key_status1:
+        if key_status1:
+            logger.info("Button 1 Pressed")
+            GPIO.output(15, True)
+            try:
+                callerscript = scriptpath + "/callerscripts/script01.py"
+                logger.info("calling %s", callerscript )
+                subprocess.call(callerscript)
+            except:
+                logger.error('%s not found', callerscript)
+        else:
+            GPIO.output(15, False)
+            logger.debug("Button 1 released")
         last_key_status1 = key_status1
-    if key_status2 and (key_status2 != last_key_status2):
-        print("Button 2 Pressed")
-        logging.debug('Button 2 Pressed')
-        GPIO.output(23, True)
-        subprocess.Popen("callscripts/save/script02.py")
-        last_key_status2 = key_status2
-    if key_status3 and (key_status3 != last_key_status3):
-        print("Button 3 Pressed")
-        logging.debug('Button 3 Pressed')
-        GPIO.output(25, True)
-        subprocess.Popen("callscripts/save/script03.py")
-        last_key_status3 = key_status3
-    if key_status4 and (key_status4 != last_key_status4):
-        print("Button 4 Pressed")
-        logging.debug('Button 4 Pressed')
-        GPIO.output(7, True)
-        subprocess.Popen("callscripts/save/script04.py")
-        last_key_status4 = key_status4
-    if key_status5 and (key_status5 != last_key_status5):
-        print("Button 5 Pressed")
-        logging.debug('Button 5 Pressed')
-        GPIO.output(12, True)
-        subprocess.Popen("callscripts/save/script01.py")
-        last_key_status5 = key_status5
-    if key_status6 and (key_status6 != last_key_status6):
-        print("Button 6 Pressed")
-        logging.debug('Button 6 Pressed')
-        GPIO.output(20, True)
-        subprocess.Popen("callscripts/save/script06.py")
-        last_key_status6 = key_status6
 
-    if key_status1 or key_status2 or key_status3 or key_status4:
-        logging.debug('..button still pressed')
+    if key_status2 != last_key_status2:
+        if key_status2:
+            logger.info("Button 1 Pressed")
+            GPIO.output(23, True)
+            try:
+                callerscript = scriptpath + "/callerscripts/script02.py"
+                logger.info("calling %s", callerscript )
+                subprocess.call(callerscript)
+            except:
+                logger.error('%s not found', callerscript)
+        else:
+            GPIO.output(23, False)
+            logger.debug("Button 2 released")
+        last_key_status2 = key_status2
+
+    if key_status3 != last_key_status3:
+        if key_status3:
+            logger.info("Button 3 Pressed")
+            GPIO.output(25, True)
+            try:
+                callerscript = scriptpath + "/callerscripts/script03.py"
+                logger.info("calling %s", callerscript )
+                subprocess.call(callerscript)
+            except:
+                logger.error('%s not found', callerscript)
+        else:
+            GPIO.output(25, False)
+            logger.debug("Button 3 released")
+        last_key_status3 = key_status3
+
+    if key_status4 != last_key_status4:
+        if key_status4:
+            logger.info("Button 4 Pressed")
+            GPIO.output(7, True)
+            try:
+                callerscript = scriptpath + "/callerscripts/script04.py"
+                logger.info("calling %s", callerscript )
+                subprocess.call(callerscript)
+            except:
+                logger.error('%s not found', callerscript)
+        else:
+            GPIO.output(7, False)
+            logger.debug("Button 4 released")
+        last_key_status4 = key_status4
+
+    if key_status5 != last_key_status5:
+        if key_status5:
+            logger.info("Button 5 Pressed")
+            GPIO.output(12, True)
+            try:
+                callerscript = scriptpath + "/callerscripts/script05.py"
+                logger.info("calling %s", callerscript )
+                subprocess.call(callerscript)
+            except:
+                logger.error('%s not found', callerscript)
+        else:
+            GPIO.output(12, False)
+            logger.debug("Button 5 released")
+        last_key_status5 = key_status5
+
+    if key_status6 != last_key_status6:
+        if key_status6:
+            logger.info("Button 6 Pressed")
+            GPIO.output(20, True)
+            try:
+                callerscript = scriptpath + "/callerscripts/script06.py"
+                logger.info("calling %s", callerscript )
+                subprocess.call(callerscript)
+            except:
+                logger.error('%s not found', callerscript)
+        else:
+            GPIO.output(20, False)
+            logger.debug("Button 6 released")
+        last_key_status6 = key_status6
