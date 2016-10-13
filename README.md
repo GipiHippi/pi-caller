@@ -17,5 +17,3 @@ url = webseite
 [numbers]  
 Name = Nummer
 
-
-hoilapoila
