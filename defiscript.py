@@ -68,13 +68,13 @@ scriptpath = os.path.dirname(__file__)
 # create console handler and set level to info
 # Set up a specific logger with our desired output level
 logger = logging.getLogger('defi_logger')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
-handler = logging.StreamHandler()
-handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+#handler = logging.StreamHandler()
+#handler.setLevel(logging.DEBUG)
+#formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s")
+#handler.setFormatter(formatter)
+#logger.addHandler(handler)
 
 # create rotating logfile handler
 # Add the log message handler to the logger
@@ -82,7 +82,7 @@ LOG_FILENAME ="/var/log/defi/defilog"
 handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=200000, backupCount=5)
 formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s")
 handler.setFormatter(formatter)
-handler.setLevel(logging.DEBUG)
+handler.setLevel(logging.INFO)
 logger.addHandler(handler)
 logger.info("defi alarm started")
 logger.info("using log file : %s", LOG_FILENAME)
