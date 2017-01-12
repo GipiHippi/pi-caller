@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #enable debugging
 
-#import sh
 import plivo
 import time
 import subprocess
@@ -11,56 +10,37 @@ import logging.handlers
 import RPi.GPIO as GPIO
 import datetime #Anrufszeit auslesen
 import os
-
+import time
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
+#define button and led channels
+dict_buttons = {1:14, 2:18, 3:24, 4:6, 5:1, 6:16}
+dict_leds = {1:15, 2:23, 3:25, 4:7, 5:12, 6:20}
+
 #Buttons
-GPIO.setup(14,GPIO.IN) #8
-GPIO.setup(18,GPIO.IN) #12
-GPIO.setup(24,GPIO.IN) #18
-GPIO.setup(8,GPIO.IN)  #24
-GPIO.setup(1,GPIO.IN)  #28
-GPIO.setup(16,GPIO.IN) #36
+GPIO.setup(dict_buttons[1],GPIO.IN) #8
+GPIO.setup(dict_buttons[2],GPIO.IN) #12
+GPIO.setup(dict_buttons[3],GPIO.IN) #18
+GPIO.setup(dict_buttons[4],GPIO.IN)  #24
+GPIO.setup(dict_buttons[5],GPIO.IN)  #28
+GPIO.setup(dict_buttons[6],GPIO.IN) #36
 
 #LEDs
-GPIO.setup(15,GPIO.OUT) #10
-GPIO.setup(23,GPIO.OUT) #16
-GPIO.setup(25,GPIO.OUT) #22
-GPIO.setup(7,GPIO.OUT)  #26
-GPIO.setup(12,GPIO.OUT) #32
-GPIO.setup(20,GPIO.OUT) #38
-
-#variablen deklaration
-last_key_status1 = False
-last_key_status2 = False
-last_key_status3 = False
-last_key_status4 = False
-last_key_status5 = False
-last_key_status6 = False
-
-key_status1 = False
-key_status2 = False
-key_status3 = False
-key_status4 = False
-key_status5 = False
-key_status6 = False
+GPIO.setup(dict_leds[1],GPIO.OUT) #10
+GPIO.setup(dict_leds[2],GPIO.OUT) #16
+GPIO.setup(dict_leds[3],GPIO.OUT) #22
+GPIO.setup(dict_leds[4],GPIO.OUT)  #26
+GPIO.setup(dict_leds[5],GPIO.OUT) #32
+GPIO.setup(dict_leds[6],GPIO.OUT) #38
 
 #LEDs ein aus
-GPIO.output(15, True)
-GPIO.output(23, True)
-GPIO.output(25, True)
-GPIO.output(7, True)
-GPIO.output(12, True)
-GPIO.output(20, True)
+for key, value in dict_leds.items():
+    GPIO.output(value, True)
 time.sleep(5)
-GPIO.output(15, False)
-GPIO.output(23, False)
-GPIO.output(25, False)
-GPIO.output(7, False)
-GPIO.output(12, False)
-GPIO.output(20, False)
+for key, value in dict_leds.items():
+    GPIO.output(value, False)
 
 scriptpath = os.path.dirname(__file__)
 
@@ -87,101 +67,49 @@ logger.addHandler(handler)
 logger.info("defi alarm started")
 logger.info("using log file : %s", LOG_FILENAME)
 
-while True:
-    time.sleep(0.05)
-    key_status1 = GPIO.input(14)
-    key_status2 = GPIO.input(18)
-    key_status3 = GPIO.input(24)
-    key_status4 = GPIO.input(8)
-    key_status5 = GPIO.input(1)
-    key_status6 = GPIO.input(16)
 
-    if key_status1 != last_key_status1:
-        if key_status1:
-            logger.info("Button 1 Pressed")
-            GPIO.output(15, True)
-            try:
-                callerscript = scriptpath + "/callerscripts/script01.py"
-                logger.info("calling %s", callerscript )
-                subprocess.call(callerscript)
-            except:
-                logger.error('%s not found', callerscript)
-        else:
-            GPIO.output(15, False)
-            logger.debug("Button 1 released")
-        last_key_status1 = key_status1
+def button_pressed(channel):
+    //get button number from channel
+	bt_nr = dict_buttons.keys()[dict_buttons.values().index(channel)]
+	logger.info("Button " + bt_nr + " pressed.")
+	GPIO.output(dict_leds[bt_nr], True)  //led on
+	// wait 0.3 seconds and test input again to avoid false alarms
+	time.sleep(.300)
+	if GPIO.input(channel)
+		try:
+			callerscript = scriptpath + "/callerscripts/script0" +bt_nr + ".py"
+			logger.info("calling %s", callerscript )
+			subprocess.call(callerscript)
+		except:
+			logger.error('%s not found', callerscript)
+	else
+		logger.info("no callerscript called, button pressed not long enough!")
+	GPIO.output(dict_leds[bt_nr], False)  //led off
 
-    if key_status2 != last_key_status2:
-        if key_status2:
-            logger.info("Button 1 Pressed")
-            GPIO.output(23, True)
-            try:
-                callerscript = scriptpath + "/callerscripts/script02.py"
-                logger.info("calling %s", callerscript )
-                subprocess.call(callerscript)
-            except:
-                logger.error('%s not found', callerscript)
-        else:
-            GPIO.output(23, False)
-            logger.debug("Button 2 released")
-        last_key_status2 = key_status2
+def button_pressed(channel):
+    //get button number from channel
+	bt_nr = dict_buttons.keys()[dict_buttons.values().index(channel)]
+	logger.info("Button " + bt_nr + " released (1:14, 2:18, 3:24, 4:8, 5:1 6:16)")
 
-    if key_status3 != last_key_status3:
-        if key_status3:
-            logger.info("Button 3 Pressed")
-            GPIO.output(25, True)
-            try:
-                callerscript = scriptpath + "/callerscripts/script03.py"
-                logger.info("calling %s", callerscript )
-                subprocess.call(callerscript)
-            except:
-                logger.error('%s not found', callerscript)
-        else:
-            GPIO.output(25, False)
-            logger.debug("Button 3 released")
-        last_key_status3 = key_status3
 
-    if key_status4 != last_key_status4:
-        if key_status4:
-            logger.info("Button 4 Pressed")
-            GPIO.output(7, True)
-            try:
-                callerscript = scriptpath + "/callerscripts/script04.py"
-                logger.info("calling %s", callerscript )
-                subprocess.call(callerscript)
-            except:
-                logger.error('%s not found', callerscript)
-        else:
-            GPIO.output(7, False)
-            logger.debug("Button 4 released")
-        last_key_status4 = key_status4
+GPIO.add_event_detect(dict_buttons[1], GPIO.RISING, callback=button_pressed)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_buttons[2], GPIO.RISING, callback=button_pressed)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_buttons[3], GPIO.RISING, callback=button_pressed)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_buttons[4], GPIO.RISING, callback=button_pressed)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_buttons[5], GPIO.RISING, callback=button_pressed)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_buttons[6], GPIO.RISING, callback=button_pressed)  # add rising edge detection on a channel
 
-    if key_status5 != last_key_status5:
-        if key_status5:
-            logger.info("Button 5 Pressed")
-            GPIO.output(12, True)
-            try:
-                callerscript = scriptpath + "/callerscripts/script05.py"
-                logger.info("calling %s", callerscript )
-                subprocess.call(callerscript)
-            except:
-                logger.error('%s not found', callerscript)
-        else:
-            GPIO.output(12, False)
-            logger.debug("Button 5 released")
-        last_key_status5 = key_status5
+GPIO.add_event_detect(dict_leds[1], GPIO.FALLING, callback=button_released)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_leds[2], GPIO.FALLING, callback=button_released)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_leds[3], GPIO.FALLING, callback=button_released)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_leds[4], GPIO.FALLING, callback=button_released)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_leds[5], GPIO.FALLING, callback=button_released)  # add rising edge detection on a channel
+GPIO.add_event_detect(dict_leds[6], GPIO.FALLING, callback=button_released)  # add rising edge detection on a channel
 
-    if key_status6 != last_key_status6:
-        if key_status6:
-            logger.info("Button 6 Pressed")
-            GPIO.output(20, True)
-            try:
-                callerscript = scriptpath + "/callerscripts/script06.py"
-                logger.info("calling %s", callerscript )
-                subprocess.call(callerscript)
-            except:
-                logger.error('%s not found', callerscript)
-        else:
-            GPIO.output(20, False)
-            logger.debug("Button 6 released")
-        last_key_status6 = key_status6
+try:
+    print "DefiAlarm started.."
+    while True:
+		pass
+except KeyboardInterrupt:
+    GPIO.cleanup()       # clean up GPIO on CTRL+C exit
+GPIO.cleanup()           # clean up GPIO on normal exit  
