@@ -69,11 +69,11 @@ logger.info("using log file : %s", LOG_FILENAME)
 
 
 def button_pressed(channel):
-    //get button number from channel
+    #get button number from channel
 	bt_nr = dict_buttons.keys()[dict_buttons.values().index(channel)]
 	logger.info("Button " + bt_nr + " pressed.")
 	GPIO.output(dict_leds[bt_nr], True)  //led on
-	// wait 0.3 seconds and test input again to avoid false alarms
+	# wait 0.3 seconds and test input again to avoid false alarms
 	time.sleep(.300)
 	if GPIO.input(channel)
 		try:
@@ -87,7 +87,7 @@ def button_pressed(channel):
 	GPIO.output(dict_leds[bt_nr], False)  //led off
 
 def button_pressed(channel):
-    //get button number from channel
+    #get button number from channel
 	bt_nr = dict_buttons.keys()[dict_buttons.values().index(channel)]
 	logger.info("Button " + bt_nr + " released (1:14, 2:18, 3:24, 4:8, 5:1 6:16)")
 
@@ -112,4 +112,4 @@ try:
 		pass
 except KeyboardInterrupt:
     GPIO.cleanup()       # clean up GPIO on CTRL+C exit
-GPIO.cleanup()           # clean up GPIO on normal exit  
+GPIO.cleanup()           # clean up GPIO on normal exit
