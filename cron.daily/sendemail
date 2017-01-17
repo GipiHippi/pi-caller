@@ -1,4 +1,0 @@
-#!/bin/sh
-
-cd /opt/lemt/defi/ && sudo ./coinpolice.py
-

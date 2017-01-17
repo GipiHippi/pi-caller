@@ -60,9 +60,9 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 if numbers is None:
-    print "numbers are empty"
+    logger.error("numbers are empty")
 elif numbers == True:
-    print "numbers access"
+    logger.info("numbers access")
 
 try:
     auth_id = parse_my_config()[1]["auth_id"]
