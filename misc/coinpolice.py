@@ -13,7 +13,7 @@ import socket
 
 def parse_my_config():
     cfg = ConfigParser.ConfigParser()
-    configpath = "/opt/lemt/defi/callerscripts/conf/numbers.conf"
+    configpath = "/opt/lemt/pi-caller/callerscripts/conf/numbers.conf"
     cfg.read(configpath)
 
     numbers = {}

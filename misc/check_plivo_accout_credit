@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cd /opt/lemt/defi/misc && sudo ./coinpolice.py
+cd /opt/lemt/pi-caller/misc && sudo ./coinpolice.py
 

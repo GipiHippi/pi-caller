@@ -15,11 +15,11 @@
 case "$1" in 
     start)
         echo "Starting defiscript"
-        /opt/lemt/defi/defiscript.py &
+        /opt/lemt/pi-caller/defiscript.py &
         ;;
     stop)
         echo "Stopping defiscript"
-        kill $(ps aux | grep '[p]ython /opt/lemt/defi/defiscript.py' | awk '{print $2}')
+        kill $(ps aux | grep '[p]ython /opt/lemt/pi-caller/defiscript.py' | awk '{print $2}')
         ;;
     *)
         echo "Usage: /etc/init.d/defiscript start|stop"
