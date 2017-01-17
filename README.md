@@ -24,25 +24,31 @@ Plivo Webseite: https://www.plivo.com/
 
 2. Alles (ausser .git files) nach /opt/lemt kopieren
    ```
-   cp pi-caller/ /opt/lemt/
+   sudo mkdir /opt/lemt
+   sudo cp -r pi-caller/ /opt/lemt/
    ```
 
 3. Ins Verzeichnis wechseln
    ```
    cd /opt/lemt/pi-caller/
    ```
+   
+4. Scripts ausführbar machen
+   ```
+   sudo chmod +x defiscript.py
+   ```
+   
+5. Init Script ausführbar machen und ins init.d verschieben
+   ```
+   sudo chmod +x misc/defi_start
+   sudo chown root:root misc/defi_start
+   sudo mv misc/defi_start /etc/init.d/
+   ```
 
-4. Init Script ausführbar machen und ins init.d verschieben
+6. Cronjob einrichten
    ```
-   chmod +x misc/defi_start
-   chown root:root misc/defi_start
-   mv misc/defi_start /etc/init.d/
-   ```
-
-5. Cronjob einrichten
-   ```
-   chmod +x misc/check_plivo_accout_credit
-   chown root:root misc/check_plivo_accout_credit
-   mv misc/check_plivo_accout_credit /etc/cron.daily
+   sudo chmod +x misc/check_plivo_accout_credit
+   sudo chown root:root misc/check_plivo_accout_credit
+   sudo mv misc/check_plivo_accout_credit /etc/cron.daily
    ```
 
