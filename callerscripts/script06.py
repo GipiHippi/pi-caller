@@ -10,8 +10,4 @@ import RPi.GPIO as GPIO
 
 #diese Script ist noch leer solage es keine 6en Alarm button im werk 1, 2 oder 3 gibt
 
-#LED
-GPIO.setup(12,GPIO.OUT) #32
 
-#LED aus
-GPIO.output(12, False)
