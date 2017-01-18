@@ -37,6 +37,7 @@ Plivo Webseite: https://www.plivo.com/
    ```
    sudo chmod +x defiscript.py
    sudo chown root:root defiscript.py
+   sudo chmod +x callerscripts/script*
    ```
    
 5. Init Script ausführbar machen und ins init.d verschieben
