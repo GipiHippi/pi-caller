@@ -36,6 +36,7 @@ Plivo Webseite: https://www.plivo.com/
 4. Scripts ausführbar machen
    ```
    sudo chmod +x defiscript.py
+   sudo chown root:root defiscript.py
    ```
    
 5. Init Script ausführbar machen und ins init.d verschieben
@@ -51,4 +52,21 @@ Plivo Webseite: https://www.plivo.com/
    sudo chown root:root misc/check_plivo_accout_credit
    sudo mv misc/check_plivo_accout_credit /etc/cron.daily
    ```
+   
+7. Konfiguration erstellen
+   Konfigurationsdatei '/opt/lemt/pi-caller/callerscripts/conf/numbers.conf' nach bedarf anpassen
+   ```
+   [settings]
+   auth_id = [Auth ID von Plivo.com]
+   auth_token = [Auth Token]
+   from_number = [Absendenummer für Anrufe im Format zb. 41812345678 (ohne +)]
+   log_dir = /var/log/defi 
+   url = [url to xml files]
+
+   [numbers]
+   Name 1 = 4181772xxxx   
+   Name 2 = 4181772xxxx
+   ```
+   
+
 
