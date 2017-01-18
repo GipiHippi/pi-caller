@@ -70,5 +70,11 @@ Plivo Webseite: https://www.plivo.com/
    Name 2 = 4181772xxxx
    ```
    
-
+## Update
+1. Konfiguration in /opt/lemt/pi-caller/callerscripts/conf sichern
+2. /opt/lemt löschen
+3. /etc/init.d/defi_start löschen
+4. /etc/cron.daily/check_plivo_accout_credit löschen
+5. Alles wie unter 'Installation' beschrieben installieren
+6. Konfiguration nach /opt/lemt/pi-caller/callerscripts/conf zurückschreiben
 
