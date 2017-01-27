@@ -12,6 +12,17 @@ import RPi.GPIO as GPIO
 import datetime #Anrufszeit auslesen
 import os
 
+heartbeat_sent = False
+def heartbeat():
+  global heartbeat_sent
+  curr_hour =  datetime.datetime.now().hour
+  if curr_hour == 4 and not heartbeat_sent:
+    logger.info("still alive..")
+    heartbeat_sent = True
+  if curr_hour > 4:
+    heartbeat_sent = False
+  return
+
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -88,6 +99,7 @@ for key, value in dict_leds.items():
 
 #check forever...
 while True:
+    heartbeat()
     time.sleep(0.05)
     key_status1 = GPIO.input(dict_buttons[1])
     key_status2 = GPIO.input(dict_buttons[2])
